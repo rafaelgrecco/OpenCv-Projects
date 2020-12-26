@@ -3,7 +3,7 @@ import streamlit as st
 import cv2
 from  PIL import Image, ImageEnhance
 
-Output_image = 550
+Output_image = 500
 
 def main():
 
