@@ -6,36 +6,30 @@ from  PIL import Image, ImageEnhance
 Output_image = 550
 
 def main():
-    
-    imagem = Image.open('/home/rafael/Documentos/Projeto/Imagens/ef3-placeholder-image.jpg')
+
+    imagem = Image.open('/home/rafael/Documentos/Projeto/OpenCv-Projects/Projeto1/Imagens/ef3-placeholder-image.jpg')
     st.title('Seletor de Filtros')
     st.sidebar.title('Barra Lateral')
-    
-    menu = ['Filtros', 'Sobre']
+
+    menu = ['Filtros','Correções de Imagem', 'Sobre']
     op = st.sidebar.selectbox('Opção', menu)
 
     if op == 'Filtros':
 
         img = st.file_uploader('Faça o upload de uma imagem', type=['jpg', 'png', 'jpeg'])
-        
+
         if img is not None:
             imagem = Image.open(img)
             st.sidebar.text('Imagem Original')
             st.sidebar.image(imagem, width=200)
 
-        filtro = st.sidebar.radio('Filtros', ['Original', 'Contraste', 'Grayscale', 'Sépia', 'Blur', 'Contorno', 'Sketch'])
-    
-        if filtro == 'Contraste':
-            slide = st.sidebar.slider('Contraste', 0.0, 2.0, 1.0)
-            enh = ImageEnhance.Contrast(imagem)
-            contrast_image = enh.enhance(slide)
-            st.image(contrast_image, width=Output_image)
-
-        elif filtro == 'Grayscale':
+        filtro = st.sidebar.radio('Filtros', ['Original','Grayscale', 'Sépia', 'Blur', 'Contorno', 'Sketch'])
+     
+        if filtro == 'Grayscale':
             img_convert = np.array(imagem.convert('RGB'))
             gray_image = cv2.cvtColor(img_convert, cv2.COLOR_RGB2GRAY)
             st.image(gray_image, width=Output_image)
-
+            
         elif filtro == 'Sépia':
             img_convert = np.array(imagem.convert('RGB'))
             img_convert = cv2.cvtColor(img_convert, cv2.COLOR_RGB2BGR)
@@ -66,6 +60,37 @@ def main():
             blur_image = cv2.GaussianBlur(inv_gray, (25,25), 0, 0)
             sketch_image = cv2.divide(gray_image, 255 - blur_image, scale=256)
             st.image(sketch_image, width=Output_image) 
+        else: 
+            st.image(imagem, width=Output_image)
+
+    if op == 'Correções de Imagem':
+
+        img = st.file_uploader('Faça o upload de uma imagem', type=['jpg', 'png', 'jpeg'])
+        
+        if img is not None:
+            imagem = Image.open(img)
+            st.sidebar.text('Imagem Original')
+            st.sidebar.image(imagem, width=200)
+
+        MImage = st.sidebar.radio('Aprimoramento da imagem', ['Original', 'Contraste', 'Brilho', 'Nitidez'])
+
+        if MImage == 'Contraste':
+            slide = st.sidebar.slider('Contraste', 0.0, 2.0, 1.0)
+            enh = ImageEnhance.Contrast(imagem)
+            contrast_image = enh.enhance(slide)
+            st.image(contrast_image, width=Output_image)
+        
+        elif MImage == 'Brilho':
+            slide = st.sidebar.slider('Brilho', 0.0, 5.0, 1.0)
+            enh = ImageEnhance.Brightness(imagem)
+            brightness_image = enh.enhance(slide)
+            st.image(brightness_image, width=Output_image)
+
+        elif MImage == 'Nitidez':
+            slide = st.sidebar.slider('Nitidez', 0.0, 2.0, 1.0)
+            enh = ImageEnhance.Sharpness(imagem)
+            sharpness_image = enh.enhance(slide)
+            st.image(sharpness_image, width=Output_image)
         else: 
             st.image(imagem, width=Output_image)
     
